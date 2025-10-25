@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Untuk Nazwa 💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;800&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg1:#fff1f6; --bg2:#ffeef8; --accent:#ff6b9a; --muted:#6b3b4a;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Montserrat',sans-serif;
+      background:linear-gradient(135deg,var(--bg1),var(--bg2));
+      min-height:100vh; display:flex; justify-content:center; align-items:center;
+      overflow:auto; padding:20px;
+    }
+
+    .card{
+      background:rgba(255,255,255,0.85);
+      border-radius:16px; box-shadow:0 10px 30px rgba(108,43,66,0.12);
+      overflow:visible; backdrop-filter:blur(6px); position:relative;
+      padding:18px;
+    }
+
+    .header{
+      display:flex; align-items:center; gap:12px; margin-bottom:12px;
+    }
+    .logo{
+      width:48px; height:48px; border-radius:50%;
+      background:linear-gradient(180deg,var(--accent),#ff9bbf);
+      display:flex; align-items:center; justify-content:center;
+      color:white; font-weight:800; font-family:'Playfair Display'; font-size:18px;
+    }
+    .title{font-family:'Playfair Display'; color:var(--muted); font-size:20px;}
+    .subtitle{font-size:12px; color:#87424d}
+
+    /* slider container will be sized by JS to match image natural dimensions */
+    .slider-wrap{
+      position:relative;
+      margin:0 auto;
+      overflow:visible;
+    }
+
+    .slide{
+      position:absolute; inset:0; opacity:0; transition:opacity 1s ease-in-out;
+      display:flex; align-items:center; justify-content:center;
+      background:transparent;
+    }
+    .slide img{
+      width:100%; height:100%; object-fit:contain; display:block;
+      /* ensure image is crisp; we will set container to image size */
+    }
+    .slide.active{opacity:1; z-index:1;}
+
+    .overlay{
+      position:absolute; left:0; right:0; bottom:0;
+      background:linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 100%);
+      color:white; padding:18px; text-align:center; pointer-events:none;
+    }
+    .quote{
+      font-family:'Playfair Display'; font-size:20px; line-height:1.3;
+      text-shadow:0 3px 10px rgba(0,0,0,0.45);
+    }
+    .author{font-size:12px; opacity:0.9; margin-top:6px;}
+
+    /* hearts */
+    .hearts{pointer-events:none; position:absolute; inset:0; overflow:hidden; z-index:20;}
+    .heart{
+      position:absolute; color:rgba(255,105,135,0.5);
+      animation: float 6s linear forwards;
+      will-change: transform, opacity;
+    }
+    @keyframes float {
+      0% {transform:translateY(0) scale(1); opacity:1;}
+      100% {transform:translateY(-600px) scale(1.3); opacity:0;}
+    }
+
+    @media (max-width:700px){
+      .quote{font-size:18px;}
+      .title{font-size:18px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="card">
+    <div class="header">
+      <div class="logo">❤</div>
+      <div>
+        <div class="title">Untuk Nazwa</div>
+        <div class="subtitle">Kenangan manis — berputar dengan elegan</div>
+      </div>
+    </div>
+
+    <!-- slider-wrap akan diubah ukurannya lewat JS supaya mengikuti ukuran asli foto -->
+    <div class="slider-wrap" id="sliderWrap" style="width:640px;height:360px;">
+      <div class="slide active">
+        <img id="img1" src="img/foto1.jpg" alt="Foto 1">
+        <div class="overlay">
+          <div class="quote">Nazwa, terima kasih untuk semua tawa dan kenangan yang indah.</div>
+          <div class="author">— Dari seseorang yang masih mengingat</div>
+        </div>
+      </div>
+
+      <div class="slide">
+        <img src="img/foto2.jpg" alt="Foto 2">
+        <div class="overlay">
+          <div class="quote">Kadang rindu datang tanpa alasan, mungkin karena kenangan yang terlalu manis.</div>
+          <div class="author">— Dari seseorang yang masih mengingat</div>
+        </div>
+      </div>
+
+      <div class="slide">
+        <img src="img/foto3.jpg" alt="Foto 3">
+        <div class="overlay">
+          <div class="quote">Aku disini selalu menunggu kamu buat balik sama aku, kita buka lembaran baru dan lebih bahagia lagi.</div>
+          <div class="author">— Dari seseorang yang selalu menanti</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hearts" id="hearts"></div>
+  </div>
+
+  <script>
+    // 1) Sesuaikan ukuran slider dengan ukuran natural gambar pertama (atau gambar terbesar)
+    const sliderWrap = document.getElementById('sliderWrap');
+    const firstImg = document.getElementById('img1');
+
+    function setSliderSizeFromImage(img) {
+      // pastikan gambar sudah dimuat
+      const nw = img.naturalWidth;
+      const nh = img.naturalHeight;
+      if(!nw || !nh) return;
+
+      // sisa margin layar
+      const maxWidth = Math.max(320, window.innerWidth - 60); // beri sedikit padding
+      const desiredWidth = Math.min(nw, maxWidth);
+
+      const scale = desiredWidth / nw;
+      const desiredHeight = Math.round(nh * scale);
+
+      sliderWrap.style.width = desiredWidth + 'px';
+      sliderWrap.style.height = desiredHeight + 'px';
+
+      // set semua slide absolut agar cocok
+      const slides = sliderWrap.querySelectorAll('.slide');
+      slides.forEach(s => {
+        s.style.width = '100%';
+        s.style.height = '100%';
+      });
+    }
+
+    // Jika gambar sudah langsung tersedia dari cache, gunakan segera
+    if(firstImg.complete && firstImg.naturalWidth) {
+      setSliderSizeFromImage(firstImg);
+    } else {
+      firstImg.addEventListener('load', () => setSliderSizeFromImage(firstImg));
+    }
+    // juga atur ulang ukuran saat jendela di-resize agar tetap muat
+    window.addEventListener('resize', () => {
+      if(firstImg.naturalWidth) setSliderSizeFromImage(firstImg);
+    });
+
+    // 2) Auto slide setiap 3 detik (visual only)
+    let index = 0;
+    const slides = sliderWrap.querySelectorAll('.slide');
+    setInterval(() => {
+      slides[index].classList.remove('active');
+      index = (index + 1) % slides.length;
+      slides[index].classList.add('active');
+    }, 3000);
+
+    // 3) Efek hati beterbangan (estetika)
+    const heartsContainer = document.getElementById('hearts');
+    setInterval(() => {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.textContent = '❤';
+      // posisi horizontal acak di dalam sliderWrap
+      const rect = sliderWrap.getBoundingClientRect();
+      const leftOffset = rect.left + (Math.random() * rect.width);
+      // but we will set relative to body by positioning absolutely with px from top/left
+      heart.style.left = (leftOffset - document.body.getBoundingClientRect().left) + 'px';
+      // tempat mulai di bawah slider
+      heart.style.top = (rect.bottom - 30) + 'px';
+      heart.style.fontSize = (10 + Math.random() * 26) + 'px';
+      heartsContainer.appendChild(heart);
+      // hapus setelah animasi selesai
+      setTimeout(() => heart.remove(), 6000);
+    }, 500);
+  </script>
+</body>
+</html>
